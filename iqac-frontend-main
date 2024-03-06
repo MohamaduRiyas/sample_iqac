@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./markentry.css";
-import apiHost from "../../../utils/api"; // This should point to your actual API endpoint
+import apiHost from "../../../utils/api";
 import Dropdown from "../../../components/dropdown/dropdown";
 import InputBox from "../../../components/InputBox/inputbox";
 import Button from "../../../components/Button/button";
@@ -21,7 +21,7 @@ function Markentry() {
   const [marks, setMarks] = useState([Array(10).fill(""), Array(10).fill("")]);
   const [students, setStudents] = useState([
     { name: "Student 1", id: "7376221CS223" },
-    { name: "Student 2", id: "7376221CS224"},
+    { name: "Student 2", id: "7376221CS224" },
   ]);
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -29,7 +29,7 @@ function Markentry() {
     setAcademicyearOptions([{ value: "2021-2022", label: "2021-2022" }, { value: "2022-2023", label: "2022-2023" }]);
     setSemesterOptions([{ value: "1", label: "1" }, { value: "2", label: "2" }]);
     setTestTypeOptions([{ value: "PT-1", label: "PT-1" }, { value: "PT-2", label: "PT-2" }]);
-    setSubjectOptions([{ value: "SUBJECT-1", label: "SUBJECT-1" }, { value: "SUBECT-2", label: "SUBJECT-2" }]);
+    setSubjectOptions([{ value: "SUBJECT-1", label: "SUBJECT-1" }, { value: "SUBJECT-2", label: "SUBJECT-2" }]);
     setFacultyOptions([{ value: "FACULTY-1", label: "FACULTY-1" }, { value: "FACULTY-2", label: "FACULTY-2" }]);
   }, []);
 
@@ -45,10 +45,19 @@ function Markentry() {
     setCourseOutcomes(updatedCourseOutcomes);
   };
 
-  const handleMarkChange = (studentIndex, markIndex, value) => {
-    const updatedMarks = marks.map((markArray, idx) => 
-      idx === studentIndex ? markArray.map((mark, mIdx) => mIdx === markIndex ? value : mark) : markArray
+  const handleUpdateCourseOutcome = (index) => {
+    const value = courseoutcomes[index];
+    // Adjust existing marks that exceed the new max value for this course outcome
+    const updatedMarks = marks.map(studentMarks =>
+      studentMarks.map((mark, mIdx) => (mIdx === index && Number(mark) > Number(value) ? value : mark))
     );
+    setMarks(updatedMarks);
+  };
+
+  const handleMarkChange = (studentIndex, markIndex, value) => {
+    let adjustedValue = Number(value) > Number(courseoutcomes[markIndex]) ? courseoutcomes[markIndex] : value;
+    const updatedMarks = [...marks];
+    updatedMarks[studentIndex][markIndex] = adjustedValue;
     setMarks(updatedMarks);
   };
 
@@ -60,11 +69,6 @@ function Markentry() {
     setSearchTerm(event.target.value);
   };
 
-  const handleUpdateCourseOutcome = (index) => {
-    console.log(`Update course outcome ${index + 1} with value: ${courseoutcomes[index]}`);
-    // Implement the actual update logic here
-  };
-
   const handleDeleteCourseOutcome = (index) => {
     const updatedCourseOutcomes = courseoutcomes.filter((_, i) => i !== index);
     setCourseOutcomes(updatedCourseOutcomes);
@@ -73,8 +77,8 @@ function Markentry() {
     setSelectedCount(prevCount => prevCount - 1);
   };
 
-  const filteredStudents = searchTerm.length ? students.filter(student => 
-    student.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+  const filteredStudents = searchTerm.length ? students.filter(student =>
+    student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     student.id.toString().includes(searchTerm)
   ) : students;
 
