@@ -1,0 +1,35 @@
+.Nptel table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .Nptel th, .Nptel td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+  
+  .Nptel th {
+    background-color: #f2f2f2;
+  }
+  
+  .Nptel input[type="text"] {
+    padding: 5px;
+    margin: 5px 0;
+    width: 90%;
+  }
+  
+  .Nptel button {
+    margin-right: 5px;
+    padding: 5px 10px;
+  }
+  .table-container {
+    max-height: 500px; /* Adjust this value based on your preference */
+    overflow-y: auto; 
+    overflow-x: hidden;/* Enables vertical scrolling */
+  }
+  
+  /* Your existing CSS for Nptel and other styles */
+  
+  
